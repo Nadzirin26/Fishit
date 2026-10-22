@@ -354,6 +354,18 @@ function App() {
         }));
     };
 
+    const handleSaveDeliveryReview = (orderId, reviewData) => {
+        setOrders(prev => prev.map(order => {
+            if (order.id === orderId) {
+                return {
+                    ...order,
+                    deliveryReview: reviewData
+                };
+            }
+            return order;
+        }));
+    };
+
     return (
         <div className="app-container">
             {/* FLOATING ROLE SWITCHER */}
@@ -412,7 +424,12 @@ function App() {
                         setSelectedCategory={setSelectedCategory}
                     />
                 ) : (
-                    <Tracking orders={orders} />
+                    <Tracking 
+                        orders={orders} 
+                        onSaveDeliveryReview={handleSaveDeliveryReview}
+                        showToast={showToast}
+                        onUpdateOrderStatus={updateOrderStatus}
+                    />
                 )}
             </main>
 

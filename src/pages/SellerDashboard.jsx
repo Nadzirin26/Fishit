@@ -176,6 +176,24 @@ function SellerDashboard({ orders, products, onUpdateOrderStatus, onAddProduct, 
                                             </div>
                                         )}
                                     </div>
+
+                                    {order.deliveryReview && (
+                                        <div style={{ marginTop: '8px', padding: '8px 10px', background: order.deliveryReview.fishCondition === 'safe' ? '#f0fdf4' : '#fff7ed', border: `1px solid ${order.deliveryReview.fishCondition === 'safe' ? '#bbf7d0' : '#fed7aa'}`, borderRadius: 'var(--radius-sm)', fontSize: '0.74rem' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <span style={{ fontWeight: '700', color: order.deliveryReview.fishCondition === 'safe' ? '#16a34a' : '#ea580c' }}>
+                                                    {order.deliveryReview.fishCondition === 'safe' ? '✓ Ikan Tiba Selamat' : '⚠️ Kendala D.O.A Dilaporkan'}
+                                                </span>
+                                                <span style={{ color: 'var(--brand-primary)', fontWeight: '700' }}>
+                                                    Kurir: {'⭐'.repeat(order.deliveryReview.courierRating)} ({order.deliveryReview.courierRating}/5)
+                                                </span>
+                                            </div>
+                                            {order.deliveryReview.courierReview && (
+                                                <p style={{ marginTop: '3px', color: '#475569', fontStyle: 'italic', fontSize: '0.72rem' }}>
+                                                    "{order.deliveryReview.courierReview}"
+                                                </p>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             );
                         })}

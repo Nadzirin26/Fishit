@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Package, MapPin, Truck, ChevronRight, Award, HelpCircle } from 'lucide-react';
+import DeliveryReviewCard from '../components/DeliveryReviewCard';
 
 const TRACKING_STEPS = [
     { status: 'Pesanan Diterima', label: 'Menunggu konfirmasi oleh Penjual.', icon: Package },
@@ -9,19 +10,24 @@ const TRACKING_STEPS = [
     { status: 'Tiba di Tujuan', label: 'Ikan hias telah diterima dengan selamat. Segera lakukan aklimatisasi air!', icon: MapPin }
 ];
 
-function Tracking({ orders }) {
+function Tracking({ orders, onSaveDeliveryReview, showToast, onUpdateOrderStatus }) {
     // We can simulate order progression in local state for testing purposes
     const [simulatedStatus, setSimulatedStatus] = useState({});
 
     const handleSimulateNextStep = (orderId) => {
-        setSimulatedStatus(prev => {
-            const currentStep = prev[orderId] !== undefined ? prev[orderId] : 0;
-            const nextStep = currentStep < TRACKING_STEPS.length - 1 ? currentStep + 1 : currentStep;
-            return {
-                ...prev,
-                [orderId]: nextStep
-            };
-        });
+        const order = orders.find(o => o.id === orderId);
+        const currentStatusIndex = TRACKING_STEPS.findIndex(s => s.status === order?.status);
+        const currentStep = simulatedStatus[orderId] !== undefined ? simulatedStatus[orderId] : (currentStatusIndex >= 0 ? currentStatusIndex : 0);
+        const nextStep = currentStep < TRACKING_STEPS.length - 1 ? currentStep + 1 : currentStep;
+
+        setSimulatedStatus(prev => ({
+            ...prev,
+            [orderId]: nextStep
+        }));
+
+        if (onUpdateOrderStatus && nextStep !== currentStep) {
+            onUpdateOrderStatus(orderId, TRACKING_STEPS[nextStep].status);
+        }
     };
 
     if (orders.length === 0) {
@@ -141,6 +147,15 @@ function Tracking({ orders }) {
                                     Klik tombol untuk melihat simulasi status pengiriman ikan.
                                 </span>
                             </div>
+
+                            {/* Delivery & Live Fish Condition Review Section when arrived */}
+                            {activeStepIndex === TRACKING_STEPS.length - 1 && (
+                                <DeliveryReviewCard 
+                                    order={order}
+                                    onSaveReview={onSaveDeliveryReview}
+                                    showToast={showToast}
+                                />
+                            )}
                         </div>
                     );
                 })}
