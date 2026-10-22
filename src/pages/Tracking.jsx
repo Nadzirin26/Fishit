@@ -44,14 +44,16 @@ function Tracking({ orders }) {
             
             <div style={styles.ordersList}>
                 {orders.map((order) => {
-                    const activeStepIndex = simulatedStatus[order.id] !== undefined ? simulatedStatus[order.id] : 0;
+                    const orderStatusIndex = TRACKING_STEPS.findIndex(s => s.status === order.status);
+                    const baseIndex = orderStatusIndex >= 0 ? orderStatusIndex : 0;
+                    const activeStepIndex = simulatedStatus[order.id] !== undefined ? simulatedStatus[order.id] : baseIndex;
                     
                     return (
                         <div key={order.id} style={styles.orderCard} className="glass-panel">
                             {/* Order Details Header */}
                             <div style={styles.cardHeader}>
                                 <div>
-                                    <span style={styles.orderIdText}>ID PESANAN: {order.id}</span>
+                                    <span style={styles.orderIdText}>ID PESANAN: #{order.id}</span>
                                     <div style={styles.metaRow}>
                                         <small>{new Date(order.date).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })} WIB</small>
                                         <span style={styles.separator}>•</span>
@@ -274,7 +276,7 @@ const styles = {
         zIndex: 2,
     },
     dotCheck: {
-        color: '#020617',
+        color: '#ffffff',
         fontSize: '0.7rem',
         fontWeight: 'bold',
     },

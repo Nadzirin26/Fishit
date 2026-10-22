@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import BottomNav from './components/BottomNav';
 import Home from './pages/Home';
@@ -149,17 +149,32 @@ const INITIAL_PRODUCTS = [
     },
 ];
 
+// Helper for safe localStorage retrieval
+const getStored = (key, fallback) => {
+    try {
+        const saved = localStorage.getItem(key);
+        return saved ? JSON.parse(saved) : fallback;
+    } catch (e) {
+        return fallback;
+    }
+};
+
+// Guaranteed collision-free ID generator
+const generateUniqueId = (prefix = '') => `${prefix}${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+
 function App() {
-    const [products, setProducts] = useState(INITIAL_PRODUCTS);
-    const [cartItems, setCartItems] = useState([]);
-    const [orders, setOrders] = useState([]);
+    const [products, setProducts] = useState(() => getStored('fishit_products', INITIAL_PRODUCTS));
+    const [cartItems, setCartItems] = useState(() => getStored('fishit_cart', []));
+    const [orders, setOrders] = useState(() => getStored('fishit_orders', []));
     const [activePage, setActivePage] = useState('home'); // 'home' | 'tracking'
     const [searchQuery, setSearchQuery] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('all');
     
-    // Auth, Toast, and Role States
-    const [currentUser, setCurrentUser] = useState(null); // { name, email, phone, tier }
+    // Auth, Wishlist, Toast, and Role States
+    const [currentUser, setCurrentUser] = useState(() => getStored('fishit_user', null));
+    const [wishlist, setWishlist] = useState(() => getStored('fishit_wishlist', []));
+    const [role, setRole] = useState(() => getStored('fishit_role', 'buyer')); // 'buyer' | 'seller'
     const [toasts, setToasts] = useState([]);
-    const [role, setRole] = useState('buyer'); // 'buyer' | 'seller'
     const [isLiveChatOpen, setIsLiveChatOpen] = useState(false);
     const [activeChatProduct, setActiveChatProduct] = useState(null);
 
@@ -175,19 +190,58 @@ function App() {
     const [activeReviewProductId, setActiveReviewProductId] = useState(null);
     const [lastCreatedOrder, setLastCreatedOrder] = useState(null);
 
-    // --- Toast Actions ---
+    // --- Persist to LocalStorage on changes ---
+    useEffect(() => {
+        try { localStorage.setItem('fishit_products', JSON.stringify(products)); } catch(e){}
+    }, [products]);
+
+    useEffect(() => {
+        try { localStorage.setItem('fishit_cart', JSON.stringify(cartItems)); } catch(e){}
+    }, [cartItems]);
+
+    useEffect(() => {
+        try { localStorage.setItem('fishit_orders', JSON.stringify(orders)); } catch(e){}
+    }, [orders]);
+
+    useEffect(() => {
+        try { localStorage.setItem('fishit_user', JSON.stringify(currentUser)); } catch(e){}
+    }, [currentUser]);
+
+    useEffect(() => {
+        try { localStorage.setItem('fishit_wishlist', JSON.stringify(wishlist)); } catch(e){}
+    }, [wishlist]);
+
+    useEffect(() => {
+        try { localStorage.setItem('fishit_role', JSON.stringify(role)); } catch(e){}
+    }, [role]);
+
+    // --- Toast Actions (Guaranteed Unique Key) ---
     const showToast = (message, type = 'success') => {
-        const id = Date.now();
+        const id = generateUniqueId('toast-');
         setToasts(prev => [...prev, { id, message, type }]);
         setTimeout(() => {
             setToasts(prev => prev.filter(t => t.id !== id));
         }, 3000);
     };
 
+    // --- Wishlist Actions ---
+    const toggleWishlist = (productId) => {
+        setWishlist(prev => {
+            const exists = prev.includes(productId);
+            if (exists) {
+                showToast('Ikan dihapus dari daftar favorit.', 'info');
+                return prev.filter(id => id !== productId);
+            } else {
+                showToast('Ikan ditambahkan ke favorit! ❤️', 'success');
+                return [...prev, productId];
+            }
+        });
+    };
+
     // --- Backoffice Actions ---
     const updateOrderStatus = (orderId, nextStatus) => {
         setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: nextStatus } : o));
-        showToast(`Status pesanan ${orderId} diperbarui menjadi: ${nextStatus}!`, 'info');
+        showToast(`Status pesanan #${orderId} diperbarui: ${nextStatus}!`, 'info');
     };
 
     const addProduct = (newProd) => {
@@ -322,6 +376,12 @@ function App() {
                 onUserClick={() => currentUser ? setIsProfileOpen(true) : setIsAuthOpen(true)}
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
+                wishlistCount={wishlist.length}
+                onWishlistClick={() => {
+                    setActivePage('home');
+                    setSelectedCategory('wishlist');
+                    showToast(`Menampilkan ${wishlist.length} ikan favorit Anda`, 'info');
+                }}
             />
 
             <main style={{ flexGrow: 1 }}>
@@ -346,6 +406,10 @@ function App() {
                             setActiveChatProduct(prod);
                             setIsLiveChatOpen(true);
                         }}
+                        wishlist={wishlist}
+                        onToggleWishlist={toggleWishlist}
+                        selectedCategory={selectedCategory}
+                        setSelectedCategory={setSelectedCategory}
                     />
                 ) : (
                     <Tracking orders={orders} />
@@ -354,10 +418,20 @@ function App() {
 
             {role === 'buyer' && (
                 <BottomNav 
-                    activePage={activePage} 
-                    setActivePage={setActivePage}
+                    activePage={selectedCategory === 'wishlist' && activePage === 'home' ? 'wishlist' : activePage} 
+                    setActivePage={(page) => {
+                        if (page === 'wishlist') {
+                            setActivePage('home');
+                            setSelectedCategory('wishlist');
+                        } else {
+                            if (page === 'home') setSelectedCategory('all');
+                            setActivePage(page);
+                        }
+                    }}
                     currentUser={currentUser}
                     onUserClick={() => currentUser ? setIsProfileOpen(true) : setIsAuthOpen(true)}
+                    wishlistCount={wishlist.length}
+                    orderCount={orders.filter(o => o.status !== 'Tiba di Tujuan').length}
                 />
             )}
 

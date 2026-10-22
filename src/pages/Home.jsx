@@ -1,14 +1,13 @@
 import React from 'react';
 import ProductCard from '../components/ProductCard';
-import { ShieldCheck, ShieldAlert, Award, PackageOpen, Truck, FileCheck } from 'lucide-react';
+import { ShieldCheck, ShieldAlert, Award, PackageOpen, Truck, Heart, Sparkles } from 'lucide-react';
 
-function Home({ products, searchQuery, onAddToCart, onOpenReviews, onChatClick }) {
-    const [selectedCategory, setSelectedCategory] = React.useState('all');
-
+function Home({ products, searchQuery, onAddToCart, onOpenReviews, onChatClick, wishlist = [], onToggleWishlist, selectedCategory = 'all', setSelectedCategory }) {
     const categories = [
-        { id: 'all', label: '🌈 Semua Ikan' },
-        { id: 'guppy', label: '🧬 Guppy' },
+        { id: 'all', label: 'Semua Ikan' },
+        { id: 'wishlist', label: `❤️ Favorit (${wishlist.length})` },
         { id: 'cupang', label: '👑 Betta / Cupang' },
+        { id: 'guppy', label: '🧬 Guppy' },
         { id: 'discus', label: '💎 Discus' },
         { id: 'koi', label: '🎏 Koi' },
         { id: 'tetra', label: '⚡ Neon Tetra' },
@@ -21,26 +20,46 @@ function Home({ products, searchQuery, onAddToCart, onOpenReviews, onChatClick }
     const filteredProducts = products.filter(product => {
         const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                               product.seller.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
+        
+        let matchesCategory = true;
+        if (selectedCategory === 'wishlist') {
+            matchesCategory = wishlist.includes(product.id);
+        } else if (selectedCategory !== 'all') {
+            matchesCategory = product.category === selectedCategory;
+        }
+
         return matchesSearch && matchesCategory;
     });
 
     return (
         <div style={styles.container}>
-            {/* Jumbotron / Promo Area */}
-            <section style={styles.hero} className="glass-panel glow-cyan">
-                <div style={styles.heroTextContainer}>
-                    <h2 style={styles.heroTitle}>Beli Ikan Hias Aman & Terpercaya</h2>
+            {/* Promo / Hero Banner (Clean Botanical Aquatic) */}
+            <section style={styles.hero}>
+                <div style={styles.heroContent}>
+                    <div style={styles.heroBadge}>
+                        <Sparkles size={13} color="var(--brand-primary)" />
+                        <span>Pasar Ikan Hias Terpercaya #1</span>
+                    </div>
+                    <h2 style={styles.heroTitle}>Beli Ikan Hias Segar & Bergaransi D.O.A</h2>
                     <p style={styles.heroSubtitle}>
-                        Setiap pembelian dilindungi jaminan refund 100% apabila ikan mati saat pengiriman (SOP D.O.A).
+                        Dikirim langsung dari peternak terverifikasi se-Indonesia. Packing plastik ganda + oksigen murni 48 jam & garansi 100% uang kembali jika mati di jalan.
                     </p>
+                    <div style={styles.heroChips}>
+                        <span style={styles.chip}>✓ Oksigen Murni 48 Jam</span>
+                        <span style={styles.chip}>✓ Karantina Bebas Parasit</span>
+                        <span style={styles.chip}>✓ Garansi D.O.A 100%</span>
+                    </div>
                 </div>
-                <div style={styles.floatingBubbles}>🐠 🌊 ✨</div>
             </section>
 
             {/* Product Section */}
             <section style={styles.section}>
-                <h2 style={styles.sectionTitle}>Ikan Hias Rekomendasi</h2>
+                <div style={styles.sectionHeader}>
+                    <h2 style={styles.sectionTitle}>
+                        {selectedCategory === 'wishlist' ? '❤️ Ikan Favorit Saya' : 'Katalog Ikan Pilihan'}
+                    </h2>
+                    <span style={styles.productCount}>{filteredProducts.length} Spesies</span>
+                </div>
 
                 {/* Category Pills */}
                 <div className="category-pills">
@@ -56,12 +75,31 @@ function Home({ products, searchQuery, onAddToCart, onOpenReviews, onChatClick }
                 </div>
                 
                 {filteredProducts.length === 0 ? (
-                    <div style={styles.noResults} className="glass-panel">
-                        <ShieldAlert size={36} color="var(--accent-coral)" style={{ marginBottom: '8px' }} />
-                        <h3>Ikan Tidak Ditemukan</h3>
-                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '4px' }}>
-                            Coba masukkan kata kunci pencarian yang lain atau ubah filter kategori.
-                        </p>
+                    <div style={styles.noResults}>
+                        {selectedCategory === 'wishlist' ? (
+                            <>
+                                <Heart size={40} color="#cbd5e1" style={{ marginBottom: '8px' }} />
+                                <h3>Belum Ada Ikan Favorit</h3>
+                                <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '4px' }}>
+                                    Klik ikon hati pada foto ikan untuk menyimpannya ke daftar favorit Anda.
+                                </p>
+                                <button 
+                                    onClick={() => setSelectedCategory('all')} 
+                                    className="btn btn-outline" 
+                                    style={{ marginTop: '12px' }}
+                                >
+                                    Jelajahi Semua Ikan
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <ShieldAlert size={40} color="var(--brand-secondary)" style={{ marginBottom: '8px' }} />
+                                <h3>Ikan Tidak Ditemukan</h3>
+                                <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '4px' }}>
+                                    Coba masukkan kata kunci lain atau pilih kategori yang berbeda.
+                                </p>
+                            </>
+                        )}
                     </div>
                 ) : (
                     <div style={styles.grid}>
@@ -72,81 +110,53 @@ function Home({ products, searchQuery, onAddToCart, onOpenReviews, onChatClick }
                                 onAddToCart={onAddToCart}
                                 onOpenReviews={onOpenReviews}
                                 onChatClick={onChatClick}
+                                isWishlisted={wishlist.includes(product.id)}
+                                onToggleWishlist={onToggleWishlist}
                             />
                         ))}
                     </div>
                 )}
             </section>
 
-            {/* Feature Information Card */}
-            <section style={styles.section} className="glass-panel">
-                <h3 style={{ ...styles.sectionTitle, color: 'var(--accent-cyan)' }}>
-                    🛡️ Jaminan & Keamanan Fishit
+            {/* SOP & Trust Information Card */}
+            <section style={styles.trustSection}>
+                <h3 style={styles.trustTitle}>
+                    🛡️ Jaminan Keamanan Transaksi di Fishit
                 </h3>
-                <div style={styles.featureList}>
-                    <div style={styles.featureCard}>
-                        <div style={styles.featureHeader}>
-                            <ShieldCheck size={20} color="var(--accent-cyan)" />
-                            <h4 style={styles.featureHeaderh4}>Pembayaran Aman (Escrow)</h4>
+                <div style={styles.featureGrid}>
+                    <div style={styles.featureItem}>
+                        <div style={styles.featureIconWrap}>
+                            <ShieldCheck size={20} color="var(--brand-primary)" />
                         </div>
-                        <p style={styles.featureText}>
-                            Uang Anda aman bersama kami. Dana hanya akan diserahkan ke penjual setelah ikan terkonfirmasi sampai dalam kondisi hidup.
-                        </p>
-                    </div>
-
-                    <div style={styles.featureCard}>
-                        <div style={styles.featureHeader}>
-                            <Truck size={20} color="var(--accent-cyan)" />
-                            <h4 style={styles.featureHeaderh4}>Kepastian Waktu Pengiriman</h4>
-                        </div>
-                        <p style={styles.featureText}>
-                            Sistem terhubung langsung dengan ekspedisi hewan hidup untuk memberikan pelacakan status nyata dan estimasi waktu yang tepat.
-                        </p>
-                    </div>
-
-                    <div style={styles.featureCard}>
-                        <div style={styles.featureHeader}>
-                            <Award size={20} color="var(--accent-cyan)" />
-                            <h4 style={styles.featureHeaderh4}>Standar Pelayanan Ekstra</h4>
-                        </div>
-                        <p style={styles.featureText}>
-                            Penjual di platform kami diseleksi ketat dan diwajibkan mematuhi SOP perlindungan ikan hias selama proses karantina sebelum dikirim.
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            {/* SOP Pengiriman */}
-            <section style={styles.section} className="glass-panel">
-                <h3 style={styles.sectionTitle}>📜 SOP Pengiriman (Transparansi)</h3>
-                <div style={styles.sopSteps}>
-                    <div style={styles.sopStepItem}>
-                        <div style={styles.sopIconBox} className="glow-cyan">
-                            <PackageOpen size={20} color="var(--accent-cyan)" />
-                        </div>
-                        <div style={styles.sopStepText}>
-                            <h4 style={styles.sopStepTexth4}>1. Karantina & Kemas Aman</h4>
-                            <p style={styles.sopStepTextp}>Ikan dipuasakan 24 jam agar kotoran berkurang, lalu dikemas dengan kantong plastik ganda, oksigen murni, dan kotak boks busa (styrofoam).</p>
+                        <div>
+                            <h4 style={styles.featureHeading}>Rekening Bersama (Escrow)</h4>
+                            <p style={styles.featureDesc}>
+                                Pembayaran ditahan aman oleh sistem dan baru diteruskan ke peternak setelah ikan sampai dengan sehat.
+                            </p>
                         </div>
                     </div>
 
-                    <div style={styles.sopStepItem}>
-                        <div style={styles.sopIconBox} className="glow-cyan">
-                            <Truck size={20} color="var(--accent-cyan)" />
+                    <div style={styles.featureItem}>
+                        <div style={styles.featureIconWrap}>
+                            <PackageOpen size={20} color="var(--brand-primary)" />
                         </div>
-                        <div style={styles.sopStepText}>
-                            <h4 style={styles.sopStepTexth4}>2. Ekspedisi Khusus Hewan Hidup</h4>
-                            <p style={styles.sopStepTextp}>Pengiriman menggunakan layanan kilat dari kurir spesialis pengiriman hewan hidup (hewan air) untuk meminimalisasi durasi stres ikan.</p>
+                        <div>
+                            <h4 style={styles.featureHeading}>Standar Packing Khusus</h4>
+                            <p style={styles.featureDesc}>
+                                Plastik tebal rangkap tiga dengan injeksi oksigen murni & boks styrofoam padat anti-benturan.
+                            </p>
                         </div>
                     </div>
 
-                    <div style={styles.sopStepItem}>
-                        <div style={styles.sopIconBox} className="glow-cyan">
-                            <FileCheck size={20} color="var(--accent-cyan)" />
+                    <div style={styles.featureItem}>
+                        <div style={styles.featureIconWrap}>
+                            <Award size={20} color="var(--brand-primary)" />
                         </div>
-                        <div style={styles.sopStepText}>
-                            <h4 style={styles.sopStepTexth4}>3. Garansi D.O.A (Dead On Arrival)</h4>
-                            <p style={styles.sopStepTextp}>Wajib rekam video saat unboxing pertama kali. Jika ikan mati saat sampai, kami memberikan garansi 100% dana kembali atau ganti ikan baru.</p>
+                        <div>
+                            <h4 style={styles.featureHeading}>Garansi D.O.A (Dead On Arrival)</h4>
+                            <p style={styles.featureDesc}>
+                                Sertakan video unboxing tanpa cut. Jika ikan mati di jalan, dana langsung diganti utuh 100%.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -157,130 +167,142 @@ function Home({ products, searchQuery, onAddToCart, onOpenReviews, onChatClick }
 
 const styles = {
     container: {
-        padding: '16px 16px 30px 16px',
+        padding: '16px 16px 24px 16px',
         display: 'flex',
         flexDirection: 'column',
-        gap: '24px',
+        gap: '20px',
     },
     hero: {
-        padding: '24px 20px',
+        background: 'linear-gradient(135deg, #f0fdfa 0%, #ecfeff 100%)',
+        border: '1px solid #ccfbf1',
         borderRadius: 'var(--radius-lg)',
-        border: '1px solid rgba(0, 240, 255, 0.15)',
-        background: 'linear-gradient(135deg, rgba(19, 34, 63, 0.9) 0%, rgba(5, 11, 20, 0.95) 100%)',
-        position: 'relative',
-        overflow: 'hidden',
+        padding: '20px 18px',
+        boxShadow: '0 2px 10px -2px rgba(13, 148, 136, 0.08)',
     },
-    heroTextContainer: {
-        position: 'relative',
-        zIndex: 2,
-        maxWidth: '85%',
+    heroContent: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px',
+    },
+    heroBadge: {
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '6px',
+        background: '#ffffff',
+        border: '1px solid #ccfbf1',
+        borderRadius: 'var(--radius-full)',
+        padding: '4px 10px',
+        fontSize: '0.72rem',
+        fontWeight: '700',
+        color: 'var(--brand-primary)',
+        width: 'fit-content',
     },
     heroTitle: {
-        fontSize: '1.35rem',
-        fontWeight: '700',
+        fontSize: '1.25rem',
+        fontWeight: '800',
         color: 'var(--text-primary)',
-        marginBottom: '8px',
-        lineHeight: '1.2',
+        lineHeight: '1.3',
+        letterSpacing: '-0.02em',
     },
     heroSubtitle: {
-        fontSize: '0.82rem',
+        fontSize: '0.8rem',
         color: 'var(--text-secondary)',
         lineHeight: '1.5',
     },
-    floatingBubbles: {
-        position: 'absolute',
-        bottom: '8px',
-        right: '16px',
-        fontSize: '1.8rem',
-        opacity: 0.25,
-        userSelect: 'none',
-        pointerEvents: 'none',
+    heroChips: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: '6px',
+        marginTop: '6px',
+    },
+    chip: {
+        fontSize: '0.7rem',
+        fontWeight: '600',
+        color: 'var(--brand-primary)',
+        background: 'rgba(255, 255, 255, 0.8)',
+        border: '1px solid #ccfbf1',
+        padding: '3px 8px',
+        borderRadius: 'var(--radius-sm)',
     },
     section: {
         display: 'flex',
         flexDirection: 'column',
-        gap: '16px',
-        padding: '18px',
-        borderRadius: 'var(--radius-lg)',
-        border: '1px solid var(--glass-border)',
+        gap: '12px',
+    },
+    sectionHeader: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     sectionTitle: {
-        fontSize: '1.1rem',
-        fontWeight: '600',
+        fontSize: '1.05rem',
+        fontWeight: '700',
         color: 'var(--text-primary)',
-        borderLeft: '3px solid var(--accent-cyan)',
-        paddingLeft: '10px',
     },
-    noResults: {
-        textAlign: 'center',
-        padding: '30px 16px',
-        borderRadius: 'var(--radius-md)',
-        border: '1px solid var(--glass-border)',
+    productCount: {
+        fontSize: '0.78rem',
+        color: 'var(--text-muted)',
+        fontWeight: '500',
     },
     grid: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))',
-        gap: '16px',
+        gridTemplateColumns: 'repeat(2, 1fr)',
+        gap: '12px',
     },
-    featureList: {
+    noResults: {
+        padding: '40px 20px',
+        textAlign: 'center',
+        background: '#ffffff',
+        border: '1px solid #e2e8f0',
+        borderRadius: 'var(--radius-lg)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    trustSection: {
+        background: '#ffffff',
+        border: '1px solid #e2e8f0',
+        borderRadius: 'var(--radius-lg)',
+        padding: '20px 18px',
         display: 'flex',
         flexDirection: 'column',
         gap: '14px',
+        boxShadow: 'var(--card-shadow)',
     },
-    featureCard: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '4px',
-    },
-    featureHeader: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-    },
-    featureHeaderh4: {
-        fontSize: '0.9rem',
-        fontWeight: '600',
+    trustTitle: {
+        fontSize: '0.95rem',
+        fontWeight: '700',
         color: 'var(--text-primary)',
     },
-    featureText: {
-        fontSize: '0.8rem',
-        color: 'var(--text-secondary)',
-        lineHeight: '1.5',
-        paddingLeft: '28px',
-    },
-    sopSteps: {
+    featureGrid: {
         display: 'flex',
         flexDirection: 'column',
-        gap: '16px',
-    },
-    sopStepItem: {
-        display: 'flex',
         gap: '14px',
+    },
+    featureItem: {
+        display: 'flex',
+        gap: '12px',
         alignItems: 'flex-start',
     },
-    sopIconBox: {
-        width: '40px',
-        height: '40px',
+    featureIconWrap: {
+        width: '36px',
+        height: '36px',
         borderRadius: 'var(--radius-md)',
-        background: 'rgba(0, 240, 255, 0.06)',
-        border: '1px solid var(--glass-border)',
+        background: '#f0fdfa',
+        border: '1px solid #ccfbf1',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         flexShrink: 0,
     },
-    sopStepText: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '2px',
-    },
-    sopStepTexth4: {
-        fontSize: '0.9rem',
-        fontWeight: '600',
+    featureHeading: {
+        fontSize: '0.84rem',
+        fontWeight: '700',
         color: 'var(--text-primary)',
+        marginBottom: '2px',
     },
-    sopStepTextp: {
-        fontSize: '0.8rem',
+    featureDesc: {
+        fontSize: '0.78rem',
         color: 'var(--text-secondary)',
         lineHeight: '1.45',
     }

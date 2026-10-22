@@ -123,14 +123,13 @@ const styles = {
         width: '56px',
         height: '56px',
         borderRadius: '50%',
-        background: 'linear-gradient(135deg, var(--accent-cyan) 0%, #0099ff 100%)',
-        color: '#020617',
+        background: 'var(--brand-primary)',
+        color: '#ffffff',
         fontSize: '1.5rem',
         fontWeight: 'bold',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        boxShadow: '0 0 15px rgba(0, 240, 255, 0.3)',
     },
     headerInfo: {
         display: 'flex',
@@ -198,8 +197,8 @@ const styles = {
     orderCard: {
         padding: '10px 12px',
         borderRadius: 'var(--radius-md)',
-        border: '1px solid var(--glass-border)',
-        backgroundColor: 'rgba(255, 255, 255, 0.01)',
+        border: '1px solid #e2e8f0',
+        backgroundColor: '#f8fafc',
     },
     orderHeader: {
         display: 'flex',
@@ -211,7 +210,7 @@ const styles = {
         fontSize: '0.8rem',
         fontFamily: 'monospace',
         fontWeight: 'bold',
-        color: 'var(--accent-cyan)',
+        color: 'var(--brand-primary)',
     },
     orderBody: {
         display: 'flex',
