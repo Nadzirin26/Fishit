@@ -93,7 +93,8 @@
           const broken = [...doc.images].filter(
             (i) => i.complete && !i.naturalWidth,
           ).length;
-          status.textContent = `Viewport ${width}px · ${overflow ? "OVERFLOW" : "Tanpa overflow"} · ${broken} gambar gagal`;
+          const message = `Viewport ${width}px · ${overflow ? "OVERFLOW" : "Tanpa overflow"} · ${broken} gambar gagal`;
+          if (status.textContent !== message) status.textContent = message;
           status.style.color = overflow || broken ? "#b33d35" : "#176b53";
         } catch {
           status.textContent = "Menunggu frame...";
@@ -128,7 +129,9 @@
       frame.addEventListener("load", () => {
         resize(width);
         frame.contentWindow.addEventListener("resize", measure);
-        new ResizeObserver(measure).observe(frame.contentDocument.body);
+        new ResizeObserver(() => requestAnimationFrame(measure)).observe(
+          frame.contentDocument.body,
+        );
         frame.contentDocument.addEventListener("load", measure, true);
       });
       window.addEventListener("resize", () => resize(width));
