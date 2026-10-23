@@ -131,8 +131,9 @@
       frame.addEventListener("load", () => {
         resize(width);
         frame.contentWindow.addEventListener("resize", measure);
-        new ResizeObserver(() => requestAnimationFrame(measure)).observe(
+        new MutationObserver(() => requestAnimationFrame(measure)).observe(
           frame.contentDocument.body,
+          { subtree: true, childList: true, attributes: true },
         );
         frame.contentDocument.addEventListener("load", measure, true);
       });
