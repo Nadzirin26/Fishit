@@ -3369,5 +3369,58 @@ main:focus {
   }
 }
 /* Account for the sticky header once when jumping to the catalogue. */
-.catalog-section { scroll-margin-top: 0; }
-@media (max-width: 620px) { html { scroll-padding-top: 140px; } }
+.catalog-section {
+  scroll-margin-top: 0;
+}
+@media (max-width: 620px) {
+  html {
+    scroll-padding-top: 140px;
+  }
+}
+/* Category selection stays accessible as the catalogue grows. */
+.filter-panel {
+  flex-wrap: wrap;
+}
+.filter-category {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  min-width: 0;
+}
+.filter-category select {
+  min-height: 38px;
+  max-width: 190px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fffefa;
+  color: var(--ink);
+  padding: 7px 10px;
+  font-size: 12px;
+}
+.image-credit {
+  display: block;
+  margin-top: 6px;
+  overflow-wrap: anywhere;
+}
+.image-credit a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+@media (max-width: 620px) {
+  .filter-category {
+    flex-basis: 100%;
+    justify-content: space-between;
+    font-size: 11px;
+  }
+  .filter-category select {
+    font-size: 12px;
+    max-width: 180px;
+  }
+}
+@media (max-width: 360px) {
+  .category-list {
+    margin-right: -14px;
+    padding-right: 14px;
+  }
+}

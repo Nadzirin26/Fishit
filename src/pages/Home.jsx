@@ -106,7 +106,9 @@ export default function Home({
                 </button>
                 <p>Betta splendens · Cupang hias</p>
               </div>
-              <span className="hero-number">01 / 10</span>
+              <span className="hero-number">
+                01 / {products.filter((product) => !product.archived).length}
+              </span>
             </div>
           </section>
           <div className="benefits">
@@ -221,6 +223,20 @@ export default function Home({
         </div>
         {filtersOpen && (
           <div className="filter-panel">
+            <label className="filter-category">
+              Kategori ikan
+              <select
+                aria-label="Pilih kategori ikan"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                {CATEGORIES.map(([id, name]) => (
+                  <option key={id} value={id}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+            </label>
             <label className="checkbox-label">
               <input
                 type="checkbox"

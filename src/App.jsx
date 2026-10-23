@@ -593,7 +593,7 @@ export default function App() {
       {modal?.type === "reset" && (
         <Modal
           title="Mulai demo dari awal?"
-          subtitle="Pesanan, favorit, profil, dan produk yang kamu tambahkan pada demo ini akan dihapus. Sepuluh produk awal akan dipulihkan."
+          subtitle={`Pesanan, favorit, profil, dan produk yang kamu tambahkan pada demo ini akan dihapus. ${INITIAL_PRODUCTS.length} produk awal akan dipulihkan.`}
           onClose={() => setModal(null)}
         >
           <div className="dialog-actions">

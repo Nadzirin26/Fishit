@@ -8,12 +8,12 @@ Fishit adalah demo marketplace ikan hias yang dibuat oleh **Nadzirin** untuk pro
 
 ## Coba alurnya
 
-1. Jelajahi 10 produk awal. Cari berdasarkan ikan, toko, atau kota; pilih kategori; urutkan harga/rating; simpan favorit.
+1. Jelajahi 30 produk awal dalam 21 kategori. Cari berdasarkan ikan, toko, atau kota; pilih kategori; urutkan harga/rating; simpan favorit.
 2. Tambahkan produk ke keranjang. Jumlah dibatasi oleh stok demo.
 3. Masuk menggunakan nama panggilan contoh, lalu pilih pengiriman atau ambil di toko.
 4. Selesaikan **pembayaran simulasi**. Tidak ada QR yang perlu dipindai, nomor rekening, atau tagihan sungguhan.
 5. Buka **Pesanan**, simulasikan tahap pengiriman, lalu berikan ulasan setelah selesai. Pesanan yang belum diproses bisa dibatalkan dan stoknya dikembalikan.
-6. Buka **Portal penjual** untuk mengelola Aquatic Studio. Dua produk awal sudah tersedia; coba tambah, edit, atau sembunyikan produk. Pesanan dari produk toko ini muncul di panel penjual.
+6. Buka **Portal penjual** untuk mengelola Aquatic Studio. Empat produk awal sudah tersedia; coba tambah, edit, atau sembunyikan produk. Pesanan dari produk toko ini muncul di panel penjual.
 7. Gunakan **Reset demo** di footer untuk mengembalikan seluruh data versi ini ke kondisi awal.
 
 ## Fitur
@@ -81,6 +81,8 @@ Fishit merupakan **prototipe frontend**, dengan satu identitas pengunjung dan sa
 Tidak ada autentikasi server, database bersama, pembayaran nyata, layanan kurir, chat dengan penjual, pencairan dana, atau pemrosesan klaim garansi. Gunakan nama/alamat fiktif saat mencoba. Foto unggahan dibatasi JPG, PNG, atau WebP hingga 600 KB untuk menjaga batas penyimpanan browser.
 
 Foto katalog berasal dari aset dan referensi yang digunakan pada proyek awal, lalu disimpan lokal untuk kestabilan demo. Font DM Sans dimuat dari Google Fonts dengan fallback font sistem.
+
+Katalog tambahan mencakup mas koki, manfish, danio, rasbora, gourami, platy, corydoras, pleco, rainbowfish, barb, botia, serta cichlid. Foto tambahan menggunakan gambar Wikimedia Commons dengan kredit di detail produk dan [daftar kredit foto](docs/IMAGE_CREDITS.md). Untuk mengambil ulang foto dan metadata lisensi dari sumbernya, jalankan `./scripts/Import-CatalogImages.ps1` melalui PowerShell. Penambahan katalog otomatis digabung ke penyimpanan pengunjung lama tanpa menghapus stok yang sudah berubah, produk buatan sendiri, favorit, keranjang, atau pesanan.
 
 ## Deployment
 

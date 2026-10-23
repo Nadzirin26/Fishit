@@ -228,7 +228,16 @@ export function loadDemo(initialProducts) {
         typeof saved.user.email !== "string")
     )
       return fallback;
-    return { ...fallback, ...saved };
+    // Seed additions reach returning visitors without resetting their demo data.
+    const storedIds = new Set(saved.products.map((product) => product.id));
+    const additions = initialProducts.filter(
+      (product) => !storedIds.has(product.id),
+    );
+    return {
+      ...fallback,
+      ...saved,
+      products: [...saved.products, ...structuredClone(additions)],
+    };
   } catch {
     return fallback;
   }

@@ -304,6 +304,28 @@ export function ProductDialog({
           <span className="detail-image-caption">
             Foto ilustrasi katalog demo · Kondisi dan warna individu dapat
             berbeda.
+            {product.imageCredit && (
+              <span className="image-credit">
+                Foto: {product.imageCredit.author} ·{" "}
+                <a
+                  href={
+                    product.imageCredit.licenseUrl || product.imageCredit.source
+                  }
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {product.imageCredit.license}
+                </a>{" "}
+                ·{" "}
+                <a
+                  href={product.imageCredit.source}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Wikimedia Commons
+                </a>
+              </span>
+            )}
           </span>
         </div>
         <div className="detail-info">

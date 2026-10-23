@@ -1,4 +1,6 @@
 import originalProducts from "./original-products.json" with { type: "json" };
+import extraProducts from "./extra-products.json" with { type: "json" };
+import imageCredits from "./image-credits.json" with { type: "json" };
 
 export const CATEGORIES = [
   ["all", "Semua ikan"],
@@ -11,6 +13,18 @@ export const CATEGORIES = [
   ["oscar", "Oscar"],
   ["molly", "Molly"],
   ["arowana", "Arwana"],
+  ["mas-koki", "Mas koki"],
+  ["manfish", "Manfish"],
+  ["danio", "Danio"],
+  ["rasbora", "Rasbora"],
+  ["gourami", "Gourami"],
+  ["platy", "Platy & Pedang"],
+  ["corydoras", "Corydoras"],
+  ["pleco", "Pleco"],
+  ["rainbow", "Rainbowfish"],
+  ["barb", "Barb"],
+  ["botia", "Botia"],
+  ["cichlid", "Cichlid"],
 ];
 
 const details = [
@@ -82,7 +96,7 @@ export const DEMO_STORE = {
   location: "Depok",
 };
 
-export const INITIAL_PRODUCTS = originalProducts.map((product, index) => ({
+const originalCatalog = originalProducts.map((product, index) => ({
   id: String(product.id),
   name: product.name,
   seller:
@@ -104,6 +118,20 @@ export const INITIAL_PRODUCTS = originalProducts.map((product, index) => ({
     id: `seed-${index}-${i}`,
   })),
 }));
+
+export const INITIAL_PRODUCTS = [
+  ...originalCatalog,
+  ...extraProducts.map(({ wikiTitle: _wikiTitle, ...product }) => ({
+    ...product,
+    sellerId:
+      product.seller === DEMO_STORE.name
+        ? DEMO_STORE.id
+        : `store-${product.seller.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+    image: imageCredits[product.id].image,
+    imageCredit: imageCredits[product.id],
+    reviews: [],
+  })),
+];
 
 export const STEPS = [
   "Pesanan diterima",
