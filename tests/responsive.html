@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Fishit · Responsive QA</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #dce3df;
+        font: 13px system-ui;
+        color: #234235;
+      }
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        display: flex;
+        gap: 9px;
+        align-items: center;
+        background: white;
+        padding: 12px 18px;
+        flex-wrap: wrap;
+        border-bottom: 1px solid #bccfc0;
+      }
+      button,
+      select {
+        font: inherit;
+        padding: 7px 12px;
+        background: #eff5eb;
+        border: 1px solid #b8cbb2;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button.active {
+        background: #176b53;
+        color: white;
+      }
+      #status {
+        margin-left: auto;
+        font-size: 12px;
+      }
+      #stage {
+        margin: 20px auto;
+        width: fit-content;
+        max-width: 100%;
+        overflow: auto;
+      }
+      iframe {
+        border: 0;
+        background: white;
+        display: block;
+        box-shadow: 0 4px 24px #183b2420;
+        transform-origin: top left;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <strong>Fishit · Responsive QA</strong
+      ><button data-width="320">320 px</button
+      ><button data-width="390">390 px</button
+      ><button data-width="768">768 px</button
+      ><button data-width="1024">1024 px</button
+      ><button data-width="1440">1440 px</button
+      ><select aria-label="Halaman pengujian">
+        <option value="home">Katalog</option>
+        <option value="seller">Penjual</option>
+        <option value="orders">Pesanan</option>
+        <option value="wishlist">Favorit</option></select
+      ><span id="status" role="status">Memuat...</span>
+    </header>
+    <div id="stage">
+      <iframe
+        title="Fishit viewport"
+        src="/#home"
+        width="390"
+        height="850"
+      ></iframe>
+    </div>
+    <script type="module">
+      const frame = document.querySelector("iframe"),
+        stage = document.querySelector("#stage"),
+        status = document.querySelector("#status");
+      let width = 390;
+      function measure() {
+        try {
+          const doc = frame.contentDocument;
+          const overflow = doc.documentElement.scrollWidth > width;
+          const broken = [...doc.images].filter(
+            (i) => i.complete && !i.naturalWidth,
+          ).length;
+          status.textContent = `Viewport ${width}px · ${overflow ? "OVERFLOW" : "Tanpa overflow"} · ${broken} gambar gagal`;
+          status.style.color = overflow || broken ? "#b33d35" : "#176b53";
+        } catch {
+          status.textContent = "Menunggu frame...";
+        }
+      }
+      function resize(next) {
+        width = next;
+        frame.width = width;
+        const height = Math.max(560, Math.min(850, innerHeight - 110));
+        frame.height = height;
+        const scale = Math.min(1, (innerWidth - 40) / width);
+        frame.style.transform = `scale(${scale})`;
+        stage.style.width = `${width * scale}px`;
+        stage.style.height = `${height * scale}px`;
+        document
+          .querySelectorAll("[data-width]")
+          .forEach((b) =>
+            b.classList.toggle("active", Number(b.dataset.width) === width),
+          );
+        requestAnimationFrame(measure);
+      }
+      document
+        .querySelectorAll("[data-width]")
+        .forEach((button) =>
+          button.addEventListener("click", () =>
+            resize(Number(button.dataset.width)),
+          ),
+        );
+      document.querySelector("select").addEventListener("change", (e) => {
+        frame.src = `/#${e.target.value}`;
+      });
+      frame.addEventListener("load", () => {
+        resize(width);
+        frame.contentWindow.addEventListener("resize", measure);
+        new ResizeObserver(measure).observe(frame.contentDocument.body);
+        frame.contentDocument.addEventListener("load", measure, true);
+      });
+      window.addEventListener("resize", () => resize(width));
+      resize(width);
+    </script>
+  </body>
+</html>

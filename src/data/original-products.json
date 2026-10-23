@@ -1,0 +1,121 @@
+[
+  {
+    "id": 1,
+    "name": "Ikan Guppy Cobra Premium",
+    "seller": "Toko Air Sehat",
+    "price": 15000,
+    "category": "guppy",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQH-ZahsQx26R9xRFKZGrYbxFcdrIXdaCJSsQ&s",
+    "tag": "Best Seller",
+    "reviewsData": [
+      {
+        "user": "Siska P.",
+        "rating": 5,
+        "text": "Ikan sangat sehat, berenang aktif, pengiriman sangat cepat dan packing rapi menggunakan box sterofoam!"
+      },
+      {
+        "user": "Tio W.",
+        "rating": 4,
+        "text": "Barang sesuai deskripsi, airnya jernih saat sampai."
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Cupang Halfmoon Sun Gold",
+    "seller": "Betta King Ciganjur",
+    "price": 45000,
+    "category": "cupang",
+    "image": "/images/cupang_halfmoon_gold.jpg",
+    "tag": "Hot Item",
+    "reviewsData": [
+      {
+        "user": "Budi H.",
+        "rating": 5,
+        "text": "Ekornya mekar sempurna lebar sekali! Warnanya cerah!"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Ikan Discus Blue Diamond XL",
+    "seller": "Aquatic Premium Lab",
+    "price": 250000,
+    "category": "discus",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjZM5s6hOuVwjLZ3zspm5-Afjet5k8h5lZOQ&s",
+    "tag": "Rare",
+    "reviewsData": [
+      {
+        "user": "Rian K.",
+        "rating": 5,
+        "text": "Discus sampai dengan selamat, ukurannya besar sesuai deskripsi."
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Ikan Molly Balon Orange",
+    "seller": "Fishie Farm Depok",
+    "price": 12000,
+    "category": "molly",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRs_888BF-0opj53lrZWA_vH8pDwEgbsMd_fA&s",
+    "reviewsData": []
+  },
+  {
+    "id": 5,
+    "name": "Ikan Arwana Silver Platinum",
+    "seller": "Toko Hias Jakarta",
+    "price": 550000,
+    "category": "arowana",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTa1RtbVYbtQ0gyEDkaGMvWpUeQS-HEM4tN_A&s",
+    "tag": "Premium Only",
+    "reviewsData": []
+  },
+  {
+    "id": 6,
+    "name": "Ikan Koi Kohaku A-Class",
+    "seller": "Jawa Koi Centre",
+    "price": 180000,
+    "category": "koi",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHJZBE86qIk4roJGtCSNLRDeTh1VxGw29lmQ&s",
+    "tag": "Best Seller",
+    "reviewsData": []
+  },
+  {
+    "id": 7,
+    "name": "Udang Hias Red Cherry",
+    "seller": "Shrimp Lovers Indo",
+    "price": 5000,
+    "category": "udang",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1iu2AshZHEydZ8sxb8Sn65a3QPfNtmFExiQ&s",
+    "reviewsData": []
+  },
+  {
+    "id": 8,
+    "name": "Ikan Oscar Tiger Exotic",
+    "seller": "Predator Fish Store",
+    "price": 90000,
+    "category": "oscar",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyHFrl2k5MSKFSSt2_PhaHq--U8I40RiJLOg&s",
+    "reviewsData": []
+  },
+  {
+    "id": 9,
+    "name": "Cupang Plakat Galaxy Multi",
+    "seller": "Betta King Ciganjur",
+    "price": 75000,
+    "category": "cupang",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmWLVDbM4fsqlKrmPtRlVIH2svuavM4GbHMw&s",
+    "tag": "Hot Item",
+    "reviewsData": []
+  },
+  {
+    "id": 10,
+    "name": "Ikan Neon Tetra (Paket 10 Ekor)",
+    "seller": "Toko Air Sehat",
+    "price": 30000,
+    "category": "tetra",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQ5Ya9kj1jgty3ZfVs9K3guz7XwqxxfbwAsw&s",
+    "reviewsData": []
+  }
+]
